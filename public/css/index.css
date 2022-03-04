@@ -3,7 +3,15 @@
     margin: auto;
 }
 
-.number_pad {
+.button_pad {
     text-align: center;
     margin: auto;
+}
+
+.display{
+    height: 50px;
+    width: 200px;
+    margin: auto;
+    text-align: center;
+    border: solid black;
 }
