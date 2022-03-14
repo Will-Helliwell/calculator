@@ -13,16 +13,24 @@ function init() {
 
 function handleNumberButtonClick() {
     let textAddition = this.innerText;
-    addToDisplay(textAddition);
+    updateDisplay(textAddition);
 }
 
 function handleOperatorButtonClick() {
     console.log('operator clicked');
+    let textAddition = this.innerText;
+    updateDisplay(textAddition, true);
 }
 
-function addToDisplay(textAddition) {
+function updateDisplay(textAddition, overwrite) {
     let display = document.querySelector('.display');
-    let displayText = display.innerText;
-    displayText = displayText + textAddition;
+    let displayText = "";
+
+    if(overwrite){
+        displayText = textAddition;
+    } else {
+        displayText = display.innerText;
+        displayText = displayText + textAddition;
+    }
     display.innerText = displayText;
 }
