@@ -8,9 +8,13 @@ function init() {
 }
 
 function handleClick() {
+    let textAddition = this.innerText;
+    updateDisplay(textAddition);
+}
+
+function updateDisplay(textAddition) {
     let display = document.querySelector('.display');
     let displayText = display.innerText;
-    let textAddition = this.innerText;
     displayText = displayText + " " + textAddition;
     display.innerText = displayText;
 }
