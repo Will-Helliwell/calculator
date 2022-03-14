@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', init());
 
 function init() {
+    var display = document.querySelector('.display');
+    let sumString = "";
     let numberButtons = document.querySelectorAll('.button.number');
     numberButtons.forEach(numberButton => {
         numberButton.addEventListener('click', handleNumberButtonClick);
@@ -9,28 +11,44 @@ function init() {
     operatorButtons.forEach(operatorButton => {
         operatorButton.addEventListener('click', handleOperatorButtonClick);
     });
-}
 
-function handleNumberButtonClick() {
-    let textAddition = this.innerText;
-    updateDisplay(textAddition);
-}
 
-function handleOperatorButtonClick() {
-    console.log('operator clicked');
-    let textAddition = this.innerText;
-    updateDisplay(textAddition, true);
-}
-
-function updateDisplay(textAddition, overwrite) {
-    let display = document.querySelector('.display');
-    let displayText = "";
-
-    if(overwrite){
-        displayText = textAddition;
-    } else {
-        displayText = display.innerText;
-        displayText = displayText + textAddition;
+    function handleNumberButtonClick() {
+        let textAddition = this.innerText;
+        updateDisplay(textAddition);
     }
-    display.innerText = displayText;
+
+    function handleOperatorButtonClick() {
+        updateSumString();
+        let operatorString = this.innerText;
+        updateDisplay(operatorString, true);
+    }
+
+    function updateDisplay(textAddition, overwrite) {
+        let displayText = "";
+
+        if (overwrite) {
+            displayText = textAddition;
+        } else {
+            displayText = display.innerText;
+            displayText = displayText + textAddition;
+        }
+        display.innerText = displayText;
+    }
+
+    function updateSumString() {
+        let displayString = display.innerText;
+        console.log(displayString);
+        sumString += displayString;
+        console.log(sumString);
+    }
+
 }
+
+// iPhone calculator behaviour
+// If 2 +- in a row, display initial answer once 2nd +- pressed
+// Same for x/
+// Same for x/ followed by -+
+// +- followed by a x/ --> do not evaluate until the next +- or = is pressed
+    // nb - if multiple x/ are pressed, evaluate the x/ string as you go (but only include the
+    // preceding +- once the next +- or = ae pressed
