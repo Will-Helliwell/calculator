@@ -4,24 +4,29 @@ function init() {
     var display = document.querySelector('.display');
     let sumString = "";
     let numberButtons = document.querySelectorAll('.button.number');
+    let operatorButtons = document.querySelectorAll('.button.operator');
+
     numberButtons.forEach(numberButton => {
         numberButton.addEventListener('click', handleNumberButtonClick);
     });
-    let operatorButtons = document.querySelectorAll('.button.operator');
     operatorButtons.forEach(operatorButton => {
         operatorButton.addEventListener('click', handleOperatorButtonClick);
     });
 
 
     function handleNumberButtonClick() {
+        let selectedButtons = document.querySelectorAll('.clicked');
+        selectedButtons.forEach(selectedButton => {
+            selectedButton.classList.remove('clicked');
+        });
         let textAddition = this.innerText;
         updateDisplay(textAddition);
     }
 
     function handleOperatorButtonClick() {
+        this.classList.add('clicked');
         updateSumString();
-        let operatorString = this.innerText;
-        updateDisplay(operatorString, true);
+        updateDisplay("", true);
     }
 
     function updateDisplay(textAddition, overwrite) {

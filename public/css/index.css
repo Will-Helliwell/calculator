@@ -15,3 +15,7 @@
     text-align: center;
     border: solid black;
 }
+
+.clicked{
+    background-color: grey;
+}
