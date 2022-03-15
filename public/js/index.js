@@ -43,9 +43,8 @@ function init() {
 
     function updateSumString() {
         let displayString = display.innerText;
-        console.log(displayString);
-        sumString += displayString;
-        console.log(sumString);
+        let operator = document.querySelector('button.operator.clicked').innerText;
+        sumString += (displayString + operator);
     }
 
 }
