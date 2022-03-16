@@ -1,10 +1,15 @@
 document.addEventListener('DOMContentLoaded', init());
 
 function init() {
+    const operators = ["/", "*", "+", "-"];
+    // const operatorsRegEx = new RegExp('\+|\-|\/|\*');
+    const operatorsRegEx = new RegExp('(\\+|\\-|\\/|\\*|\\=)');
+    let sumString = "";
+
     var display = document.querySelector('.display');
     let numberButtons = document.querySelectorAll('.button.number');
     let operatorButtons = document.querySelectorAll('.button.operator');
-    let sumString = "";
+    let equalsButton = document.querySelector('#equals');
 
     numberButtons.forEach(numberButton => {
         numberButton.addEventListener('click', handleNumberButtonClick);
@@ -12,6 +17,7 @@ function init() {
     operatorButtons.forEach(operatorButton => {
         operatorButton.addEventListener('click', handleOperatorButtonClick);
     });
+    equalsButton.addEventListener('click', handleEqualsButtonClick);
 
 
     function handleNumberButtonClick() {
@@ -22,8 +28,21 @@ function init() {
 
     function handleOperatorButtonClick() {
         this.classList.add('clicked');
-        updateSumString();
+        let displayString = display.innerText;
+        let operator = document.querySelector('button.operator.clicked').innerText;
+        sumString += (displayString + operator);
         updateDisplay("", true);
+    }
+
+    function handleEqualsButtonClick() {
+        let displayString = display.innerText;
+        console.log('sumString before' + sumString);
+        sumString += displayString;
+        console.log('sumString after' + sumString);
+        result = calculateSumString(sumString);
+        updateDisplay(result, true);
+        sumString = "";
+        console.log('sumString after calculation' + sumString);
     }
 
     function deselectAllButtons() {
@@ -45,12 +64,79 @@ function init() {
         display.innerText = displayText;
     }
 
-    function updateSumString() {
-        let displayString = display.innerText;
-        let operator = document.querySelector('button.operator.clicked').innerText;
-        sumString += (displayString + operator);
+    function calculateSumString(sumStr) {
+        sumStr += '=';
+        sumArr = sumStr.split(operatorsRegEx).filter(element => {return element != ""});
+        console.log(sumArr);
+        operators.forEach((operator) => {
+            console.log(`operator = ` + operator);
+            sumArrTemp = [];
+            indexesProcessed = [];
+            sumArr.forEach((element, index) => {
+                console.log('element = ' + element);
+                // for priority operator
+                if (element === operator) {
+                    console.log('operator match' + operator);
+                    // if previous number has already been processed
+                    if (indexesProcessed.includes(index - 1)) {
+                        console.log('previous number processed');
+                        lastIndex = sumArrTemp.length - 1;
+                        console.log('last index = ' + lastIndex);
+                        console.log('last index value = ' + sumArrTemp[lastIndex]);
+                        console.log('sumArrTemp before = ' + sumArrTemp);
+                        sumArrTemp[lastIndex] = calculate(sumArrTemp[lastIndex], operator, sumArr[index + 1]);
+                        console.log('sumArrTemp after = ' + sumArrTemp);
+                        indexesProcessed.push(index, index + 1);
+                    } else {
+                        let result = calculate(sumArr[index - 1], sumArr[index], sumArr[index + 1]);
+                        sumArrTemp.push(result);
+                        indexesProcessed.push(index - 1, index, index + 1);
+                    }
+                // for non-priority operators
+                } else if (operators.includes(element) && element != operator) {
+                    if (indexesProcessed.includes(index - 1)) {
+                        sumArrTemp.push(sumArr[index]);
+                        indexesProcessed.push(index);
+                    } else {
+                        sumArrTemp.push(sumArr[index - 1], sumArr[index]);
+                        indexesProcessed.push(index - 1, index);
+                    }
+                } else if (element === "=") {
+                    if (!indexesProcessed.includes(index - 1)) {
+                        sumArrTemp.push(sumArr[index - 1]);
+                        indexesProcessed.push(index);
+                    };
+                };
+                console.log('sumArrTemp = ' + sumArrTemp);
+                console.log(sumArrTemp);
+            });
+            sumArr = sumArrTemp;
+            sumArr.push('=');
+        });
+
+        sumArr = sumArr.filter(element => {return element != '='});
+        return sumArr.join("");
     }
 
+}
+
+function calculate(number1, operator, number2) {
+    switch (operator) {
+        case "+":
+            return parseInt(number1) + parseInt(number2);
+            break;
+        case "-":
+            return parseInt(number1) - parseInt(number2);
+            break;
+        case "/":
+            return parseInt(number1) / parseInt(number2);
+            break;
+        case "*":
+            return parseInt(number1) * parseInt(number2);
+            break;
+        default:
+            break;
+    }
 }
 
 // iPhone calculator behaviour
@@ -60,3 +146,6 @@ function init() {
 // +- followed by a x/ --> do not evaluate until the next +- or = is pressed
     // nb - if multiple x/ are pressed, evaluate the x/ string as you go (but only include the
     // preceding +- once the next +- or = ae pressed
+
+
+// 1+2*34*4-8
