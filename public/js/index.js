@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', init());
 
 function init() {
     var display = document.querySelector('.display');
-    let sumString = "";
     let numberButtons = document.querySelectorAll('.button.number');
     let operatorButtons = document.querySelectorAll('.button.operator');
+    let sumString = "";
 
     numberButtons.forEach(numberButton => {
         numberButton.addEventListener('click', handleNumberButtonClick);
@@ -15,10 +15,7 @@ function init() {
 
 
     function handleNumberButtonClick() {
-        let selectedButtons = document.querySelectorAll('.clicked');
-        selectedButtons.forEach(selectedButton => {
-            selectedButton.classList.remove('clicked');
-        });
+        deselectAllButtons();
         let textAddition = this.innerText;
         updateDisplay(textAddition);
     }
@@ -27,6 +24,13 @@ function init() {
         this.classList.add('clicked');
         updateSumString();
         updateDisplay("", true);
+    }
+
+    function deselectAllButtons() {
+        let selectedButtons = document.querySelectorAll('.clicked');
+        selectedButtons.forEach(selectedButton => {
+            selectedButton.classList.remove('clicked');
+        });
     }
 
     function updateDisplay(textAddition, overwrite) {
