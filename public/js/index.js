@@ -6,8 +6,6 @@ function init() {
         ["+", "-"]
     ];
     const allOperators = [].concat.apply([], operators);
-    console.log(allOperators);
-    // const operatorsRegEx = new RegExp('\+|\-|\/|\*');
     const operatorsRegEx = new RegExp('(\\+|\\-|\\/|\\*|\\=)');
     let sumString = "";
 
@@ -41,13 +39,10 @@ function init() {
 
     function handleEqualsButtonClick() {
         let displayString = display.innerText;
-        console.log('sumString before' + sumString);
         sumString += displayString;
-        console.log('sumString after' + sumString);
         result = calculateSumString(sumString);
         updateDisplay(result, true);
         sumString = "";
-        console.log('sumString after calculation' + sumString);
     }
 
     function deselectAllButtons() {
@@ -72,25 +67,16 @@ function init() {
     function calculateSumString(sumStr) {
         sumStr += '=';
         sumArr = sumStr.split(operatorsRegEx).filter(element => {return element != ""});
-        console.log(sumArr);
         operators.forEach((operatorGroup) => {
-            console.log(`operatorGroup = ` + operatorGroup);
             sumArrTemp = [];
             indexesProcessed = [];
             sumArr.forEach((element, index) => {
-                console.log('element = ' + element);
                 // for priority operatorGroup
                 if (operatorGroup.includes(element)) {
-                    console.log('operatorGroup match' + operatorGroup);
                     // if previous number has already been processed
                     if (indexesProcessed.includes(index - 1)) {
-                        console.log('previous number processed');
                         lastIndex = sumArrTemp.length - 1;
-                        console.log('last index = ' + lastIndex);
-                        console.log('last index value = ' + sumArrTemp[lastIndex]);
-                        console.log('sumArrTemp before = ' + sumArrTemp);
                         sumArrTemp[lastIndex] = calculate(sumArrTemp[lastIndex], element, sumArr[index + 1]);
-                        console.log('sumArrTemp after = ' + sumArrTemp);
                         indexesProcessed.push(index, index + 1);
                     } else {
                         let result = calculate(sumArr[index - 1], element, sumArr[index + 1]);
@@ -112,8 +98,6 @@ function init() {
                         indexesProcessed.push(index);
                     };
                 };
-                console.log('sumArrTemp = ' + sumArrTemp);
-                console.log(sumArrTemp);
             });
             sumArr = sumArrTemp;
             sumArr.push('=');
@@ -151,6 +135,3 @@ function calculate(number1, operatorGroup, number2) {
 // +- followed by a x/ --> do not evaluate until the next +- or = is pressed
     // nb - if multiple x/ are pressed, evaluate the x/ string as you go (but only include the
     // preceding +- once the next +- or = ae pressed
-
-
-// 1+2*34*4-8
