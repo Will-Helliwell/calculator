@@ -1,7 +1,12 @@
 document.addEventListener('DOMContentLoaded', init());
 
 function init() {
-    const operators = ["/", "*", "+", "-"];
+    const operators = [
+        ["/", "*"], 
+        ["+", "-"]
+    ];
+    const allOperators = [].concat.apply([], operators);
+    console.log(allOperators);
     // const operatorsRegEx = new RegExp('\+|\-|\/|\*');
     const operatorsRegEx = new RegExp('(\\+|\\-|\\/|\\*|\\=)');
     let sumString = "";
@@ -68,15 +73,15 @@ function init() {
         sumStr += '=';
         sumArr = sumStr.split(operatorsRegEx).filter(element => {return element != ""});
         console.log(sumArr);
-        operators.forEach((operator) => {
-            console.log(`operator = ` + operator);
+        operators.forEach((operatorGroup) => {
+            console.log(`operatorGroup = ` + operatorGroup);
             sumArrTemp = [];
             indexesProcessed = [];
             sumArr.forEach((element, index) => {
                 console.log('element = ' + element);
-                // for priority operator
-                if (element === operator) {
-                    console.log('operator match' + operator);
+                // for priority operatorGroup
+                if (operatorGroup.includes(element)) {
+                    console.log('operatorGroup match' + operatorGroup);
                     // if previous number has already been processed
                     if (indexesProcessed.includes(index - 1)) {
                         console.log('previous number processed');
@@ -84,16 +89,16 @@ function init() {
                         console.log('last index = ' + lastIndex);
                         console.log('last index value = ' + sumArrTemp[lastIndex]);
                         console.log('sumArrTemp before = ' + sumArrTemp);
-                        sumArrTemp[lastIndex] = calculate(sumArrTemp[lastIndex], operator, sumArr[index + 1]);
+                        sumArrTemp[lastIndex] = calculate(sumArrTemp[lastIndex], element, sumArr[index + 1]);
                         console.log('sumArrTemp after = ' + sumArrTemp);
                         indexesProcessed.push(index, index + 1);
                     } else {
-                        let result = calculate(sumArr[index - 1], sumArr[index], sumArr[index + 1]);
+                        let result = calculate(sumArr[index - 1], element, sumArr[index + 1]);
                         sumArrTemp.push(result);
                         indexesProcessed.push(index - 1, index, index + 1);
                     }
                 // for non-priority operators
-                } else if (operators.includes(element) && element != operator) {
+                } else if (allOperators.includes(element) && !operatorGroup.includes(element)) {
                     if (indexesProcessed.includes(index - 1)) {
                         sumArrTemp.push(sumArr[index]);
                         indexesProcessed.push(index);
@@ -120,8 +125,8 @@ function init() {
 
 }
 
-function calculate(number1, operator, number2) {
-    switch (operator) {
+function calculate(number1, operatorGroup, number2) {
+    switch (operatorGroup) {
         case "+":
             return parseInt(number1) + parseInt(number2);
             break;
